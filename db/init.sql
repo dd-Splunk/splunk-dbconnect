@@ -1,10 +1,11 @@
 use splunkdb;
 
-CREATE TABLE testtable
+CREATE TABLE splunkers
 (
-id INTEGER AUTO_INCREMENT,
+id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
 name TEXT,
 PRIMARY KEY (id)
-) COMMENT='this is my test table';
+) COMMENT='this is my Splunkers list';
 
-INSERT INTO testtable VALUES(1,"Buttercup");
+INSERT INTO splunkers(name) VALUES("Buttercup");
