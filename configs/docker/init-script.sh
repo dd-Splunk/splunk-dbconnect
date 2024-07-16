@@ -42,7 +42,7 @@ curl -k -u admin:$SPLUNK_PASSWORD -L "$API_BASE_URL/inputs" \
     \"queryTimeout\": 30,
     \"interval\": \"*/1 * * * *\",
     \"disabled\": false,
-    \"index\": \"main\",
+    \"index\": \"test\",
     \"source\": null,
     \"host\": null,
     \"warnings\": [],

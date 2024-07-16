@@ -21,6 +21,7 @@ services:
     volumes:
       - so1-var:/opt/splunk/var
       - so1-etc:/opt/splunk/etc
+      - ./configs/splunk/so1.yml:/tmp/defaults/default.yml
     restart: always
 
   so1-init:
