@@ -23,6 +23,19 @@ services:
       - so1-etc:/opt/splunk/etc
     restart: always
 
+  so1-init:
+    networks:
+      splunknet:
+    build: ./configs/docker/
+    platform: linux/amd64
+    environment:
+      - SPLUNK_USER
+      - SPLUNK_PASSWORD
+    depends_on:
+      so1:
+        condition: service_healthy
+        restart: true
+
   db:
     networks:
       splunknet:
