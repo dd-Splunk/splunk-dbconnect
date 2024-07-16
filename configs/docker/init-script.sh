@@ -4,9 +4,16 @@ HOST=so1
 
 API_BASE_URL=https://$HOST:8089/servicesNS/nobody/splunk_app_db_connect/db_connect/dbxproxy
 
+echo "Check DBX server availablility"
+until curl -k -u admin:$SPLUNK_PASSWORD -s -f -L "$API_BASE_URL/taskserver"
+do
+    printf '.'
+    sleep 5
+done
+
 IDENTITY_NAME=$DB_USER_NAME-identity
-echo "Create Identity: $IDENTITY_NAME"
-curl -k -u admin:$SPLUNK_PASSWORD -L "$API_BASE_URL/identities" \
+echo -e "\nCreate Identity: $IDENTITY_NAME"
+curl -k -u admin:$SPLUNK_PASSWORD -s -L "$API_BASE_URL/identities" \
 -H "Content-Type: application/json" \
 -d "{
     \"name\": \"$IDENTITY_NAME\",
