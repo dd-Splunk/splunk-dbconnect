@@ -31,6 +31,9 @@ services:
     environment:
       - SPLUNK_USER
       - SPLUNK_PASSWORD
+      - DB_NAME
+      - DB_USER_NAME
+      - DB_USER_PASSWORD
     depends_on:
       so1:
         condition: service_healthy
@@ -42,10 +45,11 @@ services:
     image: mysql:latest
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: splunkdb
-      MYSQL_USER: splunk
-      MYSQL_PASSWORD: changeme
+      TZ: ${TZ}
+      MYSQL_RANDOM_ROOT_PASSWORD: true
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER_NAME}
+      MYSQL_PASSWORD: ${DB_USER_PASSWORD}
     volumes:
       - db-data:/var/lib/mysql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql

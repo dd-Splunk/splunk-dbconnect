@@ -1,28 +1,25 @@
 #!/bin/ash
-SPLUNK_PASSWORD=Splunk4Me
-HOST=so1
-DB_NAME=splunkdb
-DB_USER=splunk
-DB_PASSWORD=changeme
-IDENTITY_NAME=splunk-identity
 
-echo "Get drivers"
-# curl -k -u admin:$SPLUNK_PASSWORD --location "https://$HOST:8089/servicesNS/nobody/splunk_app_db_connect/db_connect/dbxproxy/drivers"
-echo ""
-echo "Create Identity"
-curl -k -u admin:$SPLUNK_PASSWORD -L "https://$HOST:8089/servicesNS/nobody/splunk_app_db_connect/db_connect/dbxproxy/identities" \
+HOST=so1
+
+API_BASE_URL=https://$HOST:8089/servicesNS/nobody/splunk_app_db_connect/db_connect/dbxproxy
+
+IDENTITY_NAME=$DB_USER_NAME-identity
+echo "Create Identity: $IDENTITY_NAME"
+curl -k -u admin:$SPLUNK_PASSWORD -L "$API_BASE_URL/identities" \
 -H "Content-Type: application/json" \
 -d "{
     \"name\": \"$IDENTITY_NAME\",
-    \"username\": \"$DB_USER\",
-    \"password\" : \"$DB_PASSWORD\"
+    \"username\": \"$DB_USER_NAME\",
+    \"password\" : \"$DB_USER_PASSWORD\"
 }"
-echo ""
-echo "Create Connection"
-curl -k -u admin:$SPLUNK_PASSWORD -L "https://$HOST:8089/servicesNS/nobody/splunk_app_db_connect/db_connect/dbxproxy/connections" \
+
+CONNECTION_NAME=$DB_NAME-connection
+echo -e "\nCreate Connection: $CONNECTION_NAME"
+curl -k -u admin:$SPLUNK_PASSWORD -L "$API_BASE_URL/connections" \
 -H "Content-Type: application/json" \
 -d "{       
-        \"name\": \"mysql_connection\",
+        \"name\": \"$CONNECTION_NAME\",
         \"host\": \"db\",
         \"port\": 3306,
         \"jdbcUseSSL\": false,
@@ -32,14 +29,16 @@ curl -k -u admin:$SPLUNK_PASSWORD -L "https://$HOST:8089/servicesNS/nobody/splun
         \"database\": \"$DB_NAME\",
         \"identity\": \"$IDENTITY_NAME\"
 }"
-echo ""
-echo "Create Input"
-curl -k -u admin:$SPLUNK_PASSWORD -L "https://$HOST:8089/servicesNS/nobody/splunk_app_db_connect/db_connect/dbxproxy/inputs" \
+
+TABLE_NAME=splunkers
+INPUT_NAME=$DB_NAME-$TABLE_NAME-input
+echo -e "\nCreate Input: $INPUT_NAME"
+curl -k -u admin:$SPLUNK_PASSWORD -L "$API_BASE_URL/inputs" \
 -H "Content-Type: application/json" \
 -d "{
-    \"name\": \"splunkers_input\",
+    \"name\": \"$INPUT_NAME\",
     \"description\": null,
-    \"query\": \"SELECT * FROM \`splunkdb\`.\`splunkers\` WHERE id > ? ORDER BY id ASC\",
+    \"query\": \"SELECT * FROM \`$DB_NAME\`.\`$TABLE_NAME\` WHERE id > ? ORDER BY id ASC\",
     \"queryTimeout\": 30,
     \"interval\": \"*/1 * * * *\",
     \"disabled\": false,
@@ -48,7 +47,7 @@ curl -k -u admin:$SPLUNK_PASSWORD -L "https://$HOST:8089/servicesNS/nobody/splun
     \"host\": null,
     \"warnings\": [],
     \"mode\": \"rising\",
-    \"connection\": \"mysql_connection\",
+    \"connection\": \"$CONNECTION_NAME\",
     \"max_rows\": 0,
     \"fetchSize\": 300,
     \"batch_upload_size\": 1000,
@@ -70,4 +69,5 @@ curl -k -u admin:$SPLUNK_PASSWORD -L "https://$HOST:8089/servicesNS/nobody/splun
         \"timestamp\": null
     }
 }"
-echo "Finished"
+
+echo -e "\nFinished"
