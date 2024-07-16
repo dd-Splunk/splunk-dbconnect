@@ -1,22 +1,26 @@
 # Splunk-DBCONNECT
 
-## Test DB connect APIs
+Tests Splunk DBConnect (DBX) configuration through REST API calls.
 
-This will configure a standalone Splunk instance with:
+## Configuration workflow
 
-- dedicated event index named `test`
-- the DBX application installed
-- MySQ addon-on for DBX
+The Docker `compose.yml` will configure:
 
-a sidecar container will configure:
+1. A standalone Splunk instance `so1`with:
 
-- a databse identity
-- a database connection
-- a databas input with a rising column
+    - dedicated event index named `test`
+    - the DBX application installed
+    - MySQL addon-on for DBX
 
-and finally a MySQL standalone database server configured with:
+1. A sidecar container `so1-init` that will configure the Splunk instance with:
 
-- a DB user
-- a database
-- a table
-- an initial row
+    - a database identity
+    - a database connection
+    - a database input with a rising column sending data to the index `test`
+
+1. Finally a MySQL standalone database server `db`configured with:
+
+    - a DB user
+    - a database
+    - a table
+    - an initial row
