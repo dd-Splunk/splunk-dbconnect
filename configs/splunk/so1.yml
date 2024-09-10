@@ -8,3 +8,7 @@ splunk:
             homePath: $SPLUNK_DB/test/db
             coldPath: $SPLUNK_DB/test/colddb
             thawedPath: $SPLUNK_DB/test/thaweddb
+  apps_location:
+    - https://splunkbase.splunk.com/app/4353/release/1.7.16/download
+    - https://splunkbase.splunk.com/app/2686/release/3.18.0/download
+    - https://splunkbase.splunk.com/app/6154/release/1.1.1/download

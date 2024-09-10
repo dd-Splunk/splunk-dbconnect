@@ -7,11 +7,12 @@ services:
     platform: linux/amd64
     environment:
       - SPLUNK_START_ARGS=--accept-license
-      - SPLUNK_APPS_URL
+      # - SPLUNK_APPS_URL
       - SPLUNKBASE_USERNAME
       - SPLUNKBASE_PASSWORD
       - SPLUNK_PASSWORD
       - JAVA_VERSION=openjdk:11
+      # - JAVA_DOWNLOAD_URL=https://download.java.net/java/GA/jdk21/fd2272bbf8e04c3dbaee13770090416c/35/GPL/openjdk-21_linux-x64_bin.tar.gz
       - TZ=${TZ}
     ports:
       - 8000:8000
